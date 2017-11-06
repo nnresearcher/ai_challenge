@@ -25,8 +25,8 @@ def json_to_three_list(file_path,data_path):
         all_image_url.append(data[i]['image_url'])
     
     for i in range(len(all_image_id)):
-        file_path = use_os(all_image_id[i],file_path)
-        all_image_id[i] = file_path
+        new_file_path = use_os(all_image_id[i],file_path)
+        all_image_id[i] = new_file_path
 
     return all_image_id,all_label_id,all_image_url
 
