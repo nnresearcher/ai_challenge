@@ -21,7 +21,8 @@ def imgread(path):
     return img
 
 def json_to_three_list():
-    data = load(r'E:/spyder_workspace/ai_challenger_scene_train_20170904/scene_train_annotations_20170904.json')
+    data_path = r'E:/spyder_workspace/ai_challenger/ai_challenger_scene_train_20170904/scene_train_annotations_20170904.json'
+    data = load(data_path)
     all_image_id=[]
     all_label_id=[]
     all_image_url=[]
@@ -38,19 +39,18 @@ def json_to_three_list():
 
 all_image_id,all_label_id,all_image_url = json_to_three_list()
 
-img = imgread(all_image_id[0])
-plt.imshow(img)
-
-
-datagen = ImageDataGenerator(featurewise_center=True,
-                             featurewise_std_normalization=False, 
-                             rotation_range=0,
-                             width_shift_range = 0.2, 
-                             height_shift_range = 0.2, 
-                             horizontal_flip = True)
-i=0
-for batch in datagen.flow_from_directory(all_image_id):
-    i=i+1
-    if i >20:
-       break
-   print (batch)
+directory_path = 'E:/spyder_workspace/ai_challenger/data/train'
+datagen = ImageDataGenerator(
+        rotation_range=40,
+        width_shift_range=0.2,
+        height_shift_range=0.2,
+        rescale=1./255,
+        shear_range=0.2,
+        zoom_range=0.2,
+        horizontal_flip=True,
+        fill_mode='nearest')
+for x_train,y_train in datagen.flow_from_directory(directory_path):
+    print('x_train:',len(x_train))
+    print('y_train:',len(y_train))
+    print(y_train)
+    #print (batch)
