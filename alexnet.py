@@ -53,25 +53,21 @@ def json_to_three_list():
 
     return all_image_id,all_label_id,all_image_url
 def nameinfo(data_type):
-    if data_type =='validation':
-        data_path = r'E:/spyder_workspace/ai_challenger/ai_challenger_scene_validation_20170908/scene_validation_annotations_20170908.json'
-        file_path = r'E:/spyder_workspace/ai_challenger_scene_validation_20170908/scene_validation_images_20170908'
-        base = 'E:/spyder_workspace/ai_challenger/data/validation/'    
-    if data_type =='train':
-        data_path = r'E:/spyder_workspace/ai_challenger/ai_challenger_scene_train_20170904/scene_train_annotations_20170904.json'
-        file_path = r'E:/spyder_workspace/ai_challenger_scene_train_20170904/scene_train_images_20170904'
-        base = 'E:/spyder_workspace/ai_challenger/data/train/'    
-    #if data_type =='test':
-    #    data_path = r'E:/spyder_workspace/ai_challenger/ai_challenger_scene_validation_20170908/scene_validation_annotations_20170908.json'
-    #    file_path = r'E:/spyder_workspace/ai_challenger_scene_validation_20170908/scene_validation_images_20170908'
-    #    base = 'E:/spyder_workspace/ai_challenger/data/validation/'
-    return data_path,file_path,base
+       if data_type =='validation':
+              data_path = 'F:/spyder_workspace/ai_challenger/ai_challenger_scene_validation_20170908/scene_validation_annotations_20170908.json'
+              file_path = 'F:/spyder_workspace/ai_challenger/ai_challenger_scene_validation_20170908/scene_validation_images_20170908/'
+              base = 'F:/spyder_workspace/ai_challenger/data/validation/'    
+       if data_type =='train':
+              data_path = 'F:/spyder_workspace/ai_challenger/ai_challenger_scene_train_20170904/scene_train_annotations_20170904.json'
+              file_path = 'F:/spyder_workspace/ai_challenger/ai_challenger_scene_train_20170904/scene_train_images_20170904/'
+              base = 'F:/spyder_workspace/ai_challenger/data/train/' 
+       return data_path,file_path,base
 data_type = 'train'
 data_path,file_path,base = nameinfo(data_type)
 
 
-train_directory_path = 'E:/spyder_workspace/ai_challenger/data/train'
-validation_directory_path = 'E:/spyder_workspace/ai_challenger/data/validation'
+train_directory_path = 'F:/spyder_workspace/ai_challenger/data/train/'
+validation_directory_path = 'F:/spyder_workspace/ai_challenger/data/validation'
 
 # Global Constants
 NB_CLASS=80
@@ -155,20 +151,24 @@ def check_print():
 
     model.compile(optimizer='rmsprop',loss='categorical_crossentropy')
     print ('Model Compiled')
+    train_datagen = ImageDataGenerator(
+                                       rescale=1./255,
+                                       shear_range=0.2,
+                                       zoom_range=0.2,
+                                       horizontal_flip=True)
     test_datagen = ImageDataGenerator(rescale=1./255)
 
     train_generator = train_datagen.flow_from_directory(
-            train_directory_path,  # this is the target directory
-            target_size=(227, 227),  # all images will be resized to 150x150
-            batch_size=32,
-            class_mode='binary')  # since we use binary_crossentropy loss, we need binary labels
-
+                                                        train_directory_path,  # this is the target directory
+                                                        target_size=(227, 227),  # all images will be resized to 150x150
+                                                        batch_size=32,
+                                                        class_mode='categorical')  # since we use binary_crossentropy loss, we need binary labels
     # this is a similar generator, for validation data
     validation_generator = test_datagen.flow_from_directory(
             validation_directory_path,
             target_size=(227, 227),
             batch_size=32,
-            class_mode='binary')
+            class_mode='categorical')
     model.fit_generator(
             train_generator,
             samples_per_epoch=2000,
@@ -177,10 +177,4 @@ def check_print():
             nb_val_samples=800)
 
 if __name__=='__main__':
-    check_print() 
-    train_datagen = ImageDataGenerator(
-            rescale=1./255,
-            shear_range=0.2,
-            zoom_range=0.2,
-            horizontal_flip=True)
-
+       check_print() 
